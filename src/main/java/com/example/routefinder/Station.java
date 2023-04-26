@@ -7,28 +7,25 @@ public class Station {
     String name;
     double zone;
     Integer totalLines;
-    Integer line;
 
-    public Station(Integer id, double latitude, double longitude, String name, double zone, Integer totalLines, Integer line) {
+    public Station(Integer id, double latitude, double longitude, String name, double zone, Integer totalLines) {
         this.id = id;
         this.latitude = latitude;
         this.longitude = longitude;
         this.name = name;
         this.zone = zone;
         this.totalLines = totalLines;
-        this.line = line;
     }
 
     @Override
     public String toString() {
         return  "Station  " + "\n" +
+                "  name = " + name + "\n" +
                 "  id = " + id + "\n" +
                 "  latitude = " + latitude + "\n" +
                 "  longitude = " + longitude + "\n" +
-                "  name = " + name + "\n" +
                 "  zone = " + zone + "\n" +
-                "  totalLines = " + totalLines + "\n" +
-                "  line = " + line + "\n";
+                "  totalLines = " + totalLines + "\n";
     }
 
     public Integer getId() {
@@ -77,13 +74,6 @@ public class Station {
 
     public void setTotalLines(Integer totalLines) {
         this.totalLines = totalLines;
-    }
 
-    public Integer getLine() {
-        return line;
-    }
-
-    public void setLine(Integer line) {
-        this.line = line;
     }
 }

@@ -2,17 +2,17 @@ package com.example.routefinder;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import com.opencsv.CSVReader;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-public class RouteFinderController {
+public class RouteFinderController<T> {
     static Stage stage;
     ArrayList<Station> stations = new ArrayList<>();
+    List<Node<?>> graph = new ArrayList<>();
 
 
     public void openCSVFile() throws IOException {
@@ -21,9 +21,7 @@ public class RouteFinderController {
         try
         {
 //parsing a CSV file into CSVReader class constructor
-            FileChooser fileChooser = new FileChooser();
-            File selectedFile = fileChooser.showOpenDialog(stage);
-            reader = new CSVReader(new FileReader(selectedFile.getPath()));
+            reader = new CSVReader(new FileReader("/Users/anthonypower/Documents/semester4/data_structures_&_algorithims2/RouteFinder/src/main/resources/com/example/routefinder/london_underground.csv"));
             String[] values = null;
             while ((values = reader.readNext()) != null) {
                 list.add(Arrays.asList(values));
@@ -40,11 +38,9 @@ public class RouteFinderController {
                 zone = zone.replaceAll("\\uFEFF", "");
                 String totalLines = (String) e.get(5);
                 totalLines = totalLines.replaceAll("\\uFEFF", "");
-                String line = (String) e.get(6);
-                line = line.replaceAll("\\uFEFF", "");
 
 
-                Station station = new Station(Integer.parseInt(id),Double.parseDouble(latitude),Double.parseDouble(longitude), (String) e.get(3), Double.parseDouble(zone), Integer.parseInt(totalLines),Integer.parseInt(line));
+                Station station = new Station(Integer.parseInt(id),Double.parseDouble(latitude),Double.parseDouble(longitude), (String) e.get(3), Double.parseDouble(zone), Integer.parseInt(totalLines));
                 stations.add(station);
                 }
         }
@@ -55,24 +51,48 @@ public class RouteFinderController {
 //        System.out.println(stations.toString());
     }
 
-    public void shortestDistanceUsingDijkstrasAlgorithim() {
-        Node node = null;
-        Node otherNode = null;
-        Graph graph = new Graph();
-        for (Station station : stations) {
-        for (int i = 1; i < stations.size(); i++) {
-                node = new Node(station.getName());
-            if (!stations.get(i).getName().equals(station.getName()))
-                otherNode = new Node(stations.get(i).getName());
+    public void createGraphOfStations() throws IOException {
+        List<List<String>> list = new ArrayList<List<String>>();
+        CSVReader reader = null;
+        reader = new CSVReader(new FileReader("/Users/anthonypower/Documents/semester4/data_structures_&_algorithims2/RouteFinder/src/main/resources/com/example/routefinder/connections.csv"));
+        String[] values = null;
+        Node<T> node = null;
+        Node<T> otherNode = null;
 
-            if (station.getLine().equals(stations.get(i).getLine()) || station.getTotalLines() == 2) {
-                node.addDestination(otherNode, distance(station.getLatitude(), stations.get(i).getLatitude(), station.getLongitude(), stations.get(i).getLongitude()));
-                graph.addNode(node);
-                i++;
-            }
+        while ((values = reader.readNext()) != null) {
+            list.add(Arrays.asList(values));
+        }
+
+        for (List e : list) {
+            String station1 = (String) e.get(0);
+            station1 = station1.replaceAll("\\uFEFF", "");
+            int initial = Integer.parseInt(station1);
+            String station2 = (String) e.get(1);
+            station2 = station2.replaceAll("\\uFEFF", "");
+            int dest = Integer.parseInt(station2);
+            if (initial - 1 < 308 && (dest -1 < 308)) {
+                node = new Node(stations.get(initial - 1));
+                otherNode = new Node(stations.get(dest - 1));
+                node.connectToNodeUndirected(otherNode);
+                graph.add(node);
             }
         }
-        System.out.println(graph);
+        traverseGraphDepthFirst(graph,null);
+    }
+
+    public static <T> void traverseGraphDepthFirst(List<Node<?>> agenda,List<Node<?>> encountered){
+        if(agenda.isEmpty()) {
+            return;
+        }
+        Node<?> next=agenda.remove(0);
+        System.out.println(next.data.toString());
+        if(encountered==null) encountered=new ArrayList<>();
+        encountered.add(next);
+        for(Node<?> adjNode : next.adjList)
+            if (!encountered.contains(adjNode) && !agenda.contains(adjNode)) {
+                agenda.add(0,adjNode);
+            }
+            traverseGraphDepthFirst(agenda,encountered); //Tail call
     }
 
 

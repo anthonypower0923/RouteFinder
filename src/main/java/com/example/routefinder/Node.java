@@ -1,70 +1,33 @@
 package com.example.routefinder;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-public class Node {
+public class Node<T> {
 
-    private String name;
-    private String destName;
-    private double disdance;
+    public T data;
+    public List<Node<T>> adjList=new ArrayList<>(); //Could use any List implementation
 
-    private List<Node> shortestPath = new LinkedList<>();
-
-    private Double distance = Double.MAX_VALUE;
-
-    Map<Node, Double> adjacentNodes = new HashMap<>();
-
-    public void addDestination(Node destination, double distance) {
-        adjacentNodes.put(destination, distance);
-        destName = destination.name;
-        disdance = distance;
-    }
-
-    public Node(String name) {
-        this.name = name;
+    public Node(T data) {
+        this.data=data;
     }
 
     @Override
     public String toString() {
-        return "Node " +
-                "name='" + name + '\'' +
-                ", destName= " + destName +
-                ", distance= " + disdance +
-                "\n";
+        return "Node{" +
+                "data=" + data +
+                '}';
     }
 
-    public String getName() {
-        return name;
+    public void connectToNodeDirected(Node<T> destNode) {
+        adjList.add(destNode);
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void connectToNodeUndirected(Node<T> destNode) {
+        adjList.add(destNode);
+        destNode.adjList.add(this);
     }
 
-    public List<Node> getShortestPath() {
-        return shortestPath;
-    }
-
-    public void setShortestPath(List<Node> shortestPath) {
-        this.shortestPath = shortestPath;
-    }
-
-    public Double getDistance() {
-        return distance;
-    }
-
-    public void setDistance(Double distance) {
-        this.distance = distance;
-    }
-
-    public Map<Node, Double> getAdjacentNodes() {
-        return adjacentNodes;
-    }
-
-    public void setAdjacentNodes(Map<Node, Double> adjacentNodes) {
-        this.adjacentNodes = adjacentNodes;
+    public T getData() {
+        return data;
     }
 }
