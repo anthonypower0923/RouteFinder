@@ -18,8 +18,7 @@ public class RouteFinderController<T> {
     public void openCSVFile() throws IOException {
         List<List<String>> list = new ArrayList<List<String>>();
         CSVReader reader = null;
-        try
-        {
+        try {
 //parsing a CSV file into CSVReader class constructor
             reader = new CSVReader(new FileReader("/Users/anthonypower/Documents/semester4/data_structures_&_algorithims2/RouteFinder/src/main/resources/com/example/routefinder/london_underground.csv"));
             String[] values = null;
@@ -40,12 +39,10 @@ public class RouteFinderController<T> {
                 totalLines = totalLines.replaceAll("\\uFEFF", "");
 
 
-                Station station = new Station(Integer.parseInt(id),Double.parseDouble(latitude),Double.parseDouble(longitude), (String) e.get(3), Double.parseDouble(zone), Integer.parseInt(totalLines));
+                Station station = new Station(Integer.parseInt(id), Double.parseDouble(latitude), Double.parseDouble(longitude), (String) e.get(3), Double.parseDouble(zone), Integer.parseInt(totalLines));
                 stations.add(station);
-                }
-        }
-        catch (Exception e)
-        {
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
 //        System.out.println(stations.toString());
@@ -58,6 +55,7 @@ public class RouteFinderController<T> {
         String[] values = null;
         Node<T> node = null;
         Node<T> otherNode = null;
+        int i = 0;
 
         while ((values = reader.readNext()) != null) {
             list.add(Arrays.asList(values));
@@ -70,30 +68,49 @@ public class RouteFinderController<T> {
             String station2 = (String) e.get(1);
             station2 = station2.replaceAll("\\uFEFF", "");
             int dest = Integer.parseInt(station2);
-            if (initial - 1 < 308 && (dest -1 < 308)) {
-                node = new Node(stations.get(initial - 1));
-                otherNode = new Node(stations.get(dest - 1));
+            for (Station station : stations) {
+                if (i < 308) {
+                    node = new Node(stations.get(i));
+                    graph.add(node);
+                }
+                i++;
+            }
+            if ((initial - 1 < 308) && (dest - 1 < 308)) {
+                node = (Node<T>) graph.get(initial - 1);
+                otherNode = (Node<T>) graph.get(dest - 1);
                 node.connectToNodeUndirected(otherNode);
-                graph.add(node);
+//                System.out.println(" ");
+//                System.out.println(node.adjList);
             }
         }
-        traverseGraphDepthFirst(graph,null);
+        System.out.println(findPathDepthFirst(graph.get(200), null,otherNode.data));
     }
 
-    public static <T> void traverseGraphDepthFirst(List<Node<?>> agenda,List<Node<?>> encountered){
-        if(agenda.isEmpty()) {
-            return;
-        }
-        Node<?> next=agenda.remove(0);
-        System.out.println(next.data.toString());
-        if(encountered==null) encountered=new ArrayList<>();
-        encountered.add(next);
-        for(Node<?> adjNode : next.adjList)
-            if (!encountered.contains(adjNode) && !agenda.contains(adjNode)) {
-                agenda.add(0,adjNode);
-            }
-            traverseGraphDepthFirst(agenda,encountered); //Tail call
+
+    public static <T> List<Node<?>> findPathDepthFirst(Node<?> from, List<Node<?>> encountered, T lookingfor) {
+        List<Node<?>> result;
+        if (from.data.equals(lookingfor)) { //Found it
+        result = new ArrayList<>();
+        result.add(from); //Add the current node as the only/last entry in the path list
+        return result; //Return the path list
     }
+
+    if(encountered==null)
+        encountered=new ArrayList<>(); //First node so create new (empty) encountered list
+        encountered.add(from);
+
+    for(Node<?> adjNode :from.adjList)
+        if(!encountered.contains(adjNode)) {
+            result = findPathDepthFirst(adjNode, encountered, lookingfor);
+            if (result != null) {
+               result.add(0,from);
+               return result;
+            }
+        }
+    return null;
+}
+
+
 
 
 
