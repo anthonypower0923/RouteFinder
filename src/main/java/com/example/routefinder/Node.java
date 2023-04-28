@@ -5,7 +5,7 @@ import java.util.*;
 public class Node<T> {
 
     public T data;
-    public List<Node<T>> adjList=new ArrayList<>(); //Could use any List implementation
+    public List<Node> adjList=new ArrayList<>(); //Could use any List implementation
 
     public Node(T data) {
         this.data=data;

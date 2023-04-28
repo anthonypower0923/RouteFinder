@@ -9,6 +9,8 @@ import com.opencsv.CSVReader;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import static com.example.routefinder.CostedPath.searchGraphDepthFirstCheapestPath;
+
 public class RouteFinderController<T> {
     static Stage stage;
     ArrayList<Station> stations = new ArrayList<>();
@@ -83,7 +85,8 @@ public class RouteFinderController<T> {
 //                System.out.println(node.adjList);
             }
         }
-        System.out.println(findPathDepthFirst(graph.get(200), null,otherNode.data));
+        List<Node<?>> allPaths = findPathDepthFirst(graph.get(1) ,null , otherNode.data);
+        System.out.println(allPaths);
     }
 
 
@@ -110,9 +113,62 @@ public class RouteFinderController<T> {
     return null;
 }
 
+    public static <T> List<List<Node<?>>> findAllPathsDepthFirst(Node<?> from, List<Node<?>> encountered, T lookingfor) {
+        List<List<Node<?>>> result = null, temp2;
+        if (from.data.equals(lookingfor)) { //Found it
+            List<Node<?>> temp = new ArrayList<>(); //Create new single solution path list
+            temp.add(from); //Add current node to the new single path list
+            result = new ArrayList<>(); //Create new "list of lists" to store path permutations
+            result.add(temp); //Add the new single path list to the path permutations list
+            return result;
+        }
+        if (encountered == null)
+            encountered = new ArrayList<>(); //First node so create new (empty) encountered list
+            encountered.add(from); //Add current node to encountered list
 
+        for (Node<?> adjNode : from.adjList) {
+            if (!encountered.contains(adjNode)) {
+                temp2 = findAllPathsDepthFirst(adjNode, new ArrayList<>(encountered), lookingfor); //Use clone of encountered list //for recursive call!
+                if (temp2 != null) { //Result of the recursive call contains one or more paths to the solution node
+                    for (List<Node<?>> x : temp2)
+                        x.add(0, from);
+                    if(result==null) result=temp2;
+                    else result.addAll(temp2);
+                }
+            }
+        }
+        return result;
+    }
 
+    public static <T> List<Node<?>> findPathBreadthFirstly(Node<?> startNode, T lookingfor) {
+        List<List<Node<?>>> agenda = new ArrayList<>(); //Agenda comprised of path lists here!
+        List<Node<?>> firstAgendaPath = new ArrayList<>(), resultPath;
+        firstAgendaPath.add(startNode);
+        agenda.add(firstAgendaPath);
+        resultPath = findPathBreadthFirst(agenda, null, lookingfor); //Get single BFS path (will be shortest)
+        Collections.reverse(resultPath); //Reverse path (currently has the goal node as the first item)
+        return resultPath;
+    }
 
+    public static <T> List<Node<?>> findPathBreadthFirst(List<List<Node<?>>> agenda, List<Node<?>> encountered, T lookingfor) {
+        if (agenda.isEmpty())
+            return null; //Search failed
+
+        List<Node<?>> nextPath = agenda.remove(0); //Get first item (next path to consider) off agenda
+        Node<?> currentNode = nextPath.get(0); //The first item in the next path is the current node
+        if (currentNode.data.equals(lookingfor))
+            return nextPath; //If that's the goal, we've found our path (so return it)
+        if (encountered == null)
+            encountered = new ArrayList<>(); //First node considered in search so create new (empty) encountered list
+            encountered.add(currentNode); //Record current node as encountered so it isn't revisited again
+        for (Node<?> adjNode : currentNode.adjList) //For each adjacent node
+            if (!encountered.contains(adjNode)) { //If it hasn't already been encountered
+                List<Node<?>> newPath = new ArrayList<>(nextPath); //Create a new path list as a copy of the current/next path
+                newPath.add(0,adjNode); //And add the adjacent node to the front of the new copy
+                agenda.add(newPath); //Add the new path to the end of agenda (end->BFS!)
+            }
+        return findPathBreadthFirst(agenda, encountered, lookingfor); //Tail call
+    }
 
     public static double distance(double lat1, double lat2, double lon1, double lon2) {
         lon1 = Math.toRadians(lon1);
