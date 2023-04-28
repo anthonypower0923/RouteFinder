@@ -9,6 +9,7 @@ import com.opencsv.CSVReader;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import static com.example.routefinder.CostedPath.findCheapestPathDijkstra;
 import static com.example.routefinder.CostedPath.searchGraphDepthFirstCheapestPath;
 
 public class RouteFinderController<T> {
@@ -85,8 +86,8 @@ public class RouteFinderController<T> {
 //                System.out.println(node.adjList);
             }
         }
-        List<Node<?>> allPaths = findPathDepthFirst(graph.get(1) ,null , otherNode.data);
-        System.out.println(allPaths);
+//        List<Node<?>> allPaths = findPathDepthFirst(graph.get(1) ,null , otherNode.data);
+//        System.out.println(allPaths);
     }
 
 
@@ -192,5 +193,25 @@ public class RouteFinderController<T> {
         // calculate the result
         return(c * r);
     }
+    //This exists to test costed path method for errors
 
+//    NodeWithCost<Character> q=new NodeWithCost<>('Q'); NodeWithCost<Character> w=new NodeWithCost<>('W'); NodeWithCost<Character> e=new NodeWithCost<>('E'); NodeWithCost<Character> r=new NodeWithCost<>('R'); NodeWithCost<Character> t=new NodeWithCost<>('T'); NodeWithCost<Character> y =new NodeWithCost<>('Y');
+//        q.connectToNodeUndirected(w,5); w.connectToNodeUndirected(y,20); w.connectToNodeUndirected(e,2);
+//        e.connectToNodeUndirected(t,7);
+//        t.connectToNodeUndirected(r,4);
+//        t.connectToNodeUndirected(y,7);
+//        r.connectToNodeUndirected(y,6);
+//
+//        System.out.println("The cheapest path from Q to Y is:"); CostedPath cp=searchGraphDepthFirstCheapestPath(q,null,0,'Y'); for(NodeWithCost<?> n : cp.pathList)
+//            System.out.println(n.data);
+//        System.out.println("The total path cost is: "+cp.pathCost);
+
+
+    //This is to test dijkstra's algorithm
+//    NodeWithCost<String> a=new NodeWithCost<>("Silver"); NodeWithCost<String> b=new NodeWithCost<>("Bronze"); NodeWithCost<String> c=new NodeWithCost<>("Lead"); NodeWithCost<String> d=new NodeWithCost<>("Tin"); NodeWithCost<String> e=new NodeWithCost<>("Copper"); NodeWithCost<String> f=new NodeWithCost<>("Brass"); NodeWithCost<String> g=new NodeWithCost<>("Iron"); NodeWithCost<String> h=new NodeWithCost<>("Gold");
+//    a.connectToNodeUndirected(b, 5); a.connectToNodeUndirected(c, 9); b.connectToNodeUndirected(c, 2); b.connectToNodeUndirected(d, 6); c.connectToNodeUndirected(e, 5); d.connectToNodeUndirected(h, 8); d.connectToNodeUndirected(g, 9); e.connectToNodeUndirected(g, 3); e.connectToNodeUndirected(f, 7); f.connectToNodeUndirected(g, 6); g.connectToNodeUndirected(h, 2);
+//    System.out.println("The cheapest path from Silver to Gold"); System.out.println("using Dijkstra's algorithm:"); System.out.println("-------------------------------------");
+//    CostedPath cpa = findCheapestPathDijkstra(a,"Gold");
+//for(NodeWithCost<?> n : cpa.pathList) System.out.println(n.data);
+//System.out.println("\nThe total path cost is: "+cpa.pathCost);
 }
