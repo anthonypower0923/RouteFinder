@@ -1,5 +1,4 @@
 package com.example.routefinder;
-
 import java.util.*;
 
 public class Node<T> {
@@ -23,8 +22,10 @@ public class Node<T> {
     }
 
     public void connectToNodeUndirected(Node<T> destNode) {
-        adjList.add(destNode);
-        destNode.adjList.add(this);
+        if (!destNode.adjList.contains(this) || (!this.adjList.contains(destNode))) {
+            adjList.add(destNode);
+            destNode.adjList.add(this);
+        }
     }
 
     public T getData() {
