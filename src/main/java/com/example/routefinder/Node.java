@@ -21,7 +21,7 @@ public class Node<T> {
         adjList.add(destNode);
     }
 
-    public void connectToNodeUndirected(Node<T> destNode) {
+    public void connectToNodeUndirected(Node<?> destNode) {
         if (!destNode.adjList.contains(this) || (!this.adjList.contains(destNode))) {
             adjList.add(destNode);
             destNode.adjList.add(this);

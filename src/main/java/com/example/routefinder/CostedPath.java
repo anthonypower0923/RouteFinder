@@ -7,11 +7,11 @@ import java.util.List;
 
 //New class to hold a CostedPath object i.e. a list of Node objects and a total cost attribute
 public class CostedPath {
-    public int pathCost = 0;
+    public double pathCost = 0.0;
     public List<NodeWithCost<?>> pathList = new ArrayList<>();
 
     //Retrieve cheapest path by expanding all paths recursively depth-first
-    public static <T> CostedPath searchGraphDepthFirstCheapestPath(NodeWithCost<?> from, List<NodeWithCost<?>> encountered, int totalCost, T lookingfor) {
+    public static <T> CostedPath searchGraphDepthFirstCheapestPath(NodeWithCost<?> from, List<NodeWithCost<?>> encountered, double totalCost, T lookingfor) {
         if (from.data.equals(lookingfor)) { //Found it - end of path
             CostedPath cp = new CostedPath(); //Create a new CostedPath object
             cp.pathList.add(from); //Add the current node to it - only (end of path) element
@@ -30,7 +30,7 @@ public class CostedPath {
                 temp.pathList.add(0, from); //Add the current node to the front of the path list
                 allPaths.add(temp); //Add the new candidate path to the list of all costed paths)
             }
-        return allPaths.isEmpty() ? null : Collections.min(allPaths, Comparator.comparingInt(p -> p.pathCost));
+        return allPaths.isEmpty() ? null : Collections.min(allPaths, Comparator.comparingDouble(p -> p.pathCost));
     }
 
     public static <T> CostedPath findCheapestPathDijkstra(NodeWithCost<?> startNode, T lookingfor) {
@@ -67,10 +67,10 @@ public class CostedPath {
         }
                 for (GraphLink e : currentNode.adjList) //For each edge/link from the current node...
                     if (!encountered.contains(e.destNode)) { //If the node it leads to has not yet been encountered (i.e. processed)
-                        e.destNode.nodeValue = Integer.min(e.destNode.nodeValue, currentNode.nodeValue + e.cost); //Update the node value at the end //of the edge to the minimum of its current value or the total of the current node's value plus the cost of the edge
+                        e.destNode.nodeValue = Double.min(e.destNode.nodeValue, currentNode.nodeValue + e.cost); //Update the node value at the end //of the edge to the minimum of its current value or the total of the current node's value plus the cost of the edge
                         if (!unencountered.contains(e.destNode)) unencountered.add(e.destNode);
                     }
-                Collections.sort(unencountered, (n1, n2) -> n1.nodeValue - n2.nodeValue); //Sort in ascending node value order
+                Collections.sort(unencountered, (n1, n2) -> (int) (n1.nodeValue - n2.nodeValue)); //Sort in ascending node value order
             } while (!unencountered.isEmpty()) ;
             return null; //No path found, so return null
         }

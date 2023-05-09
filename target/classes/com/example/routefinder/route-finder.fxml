@@ -16,6 +16,7 @@
               <MenuItem mnemonicParsing="false" onAction="#openCSVFile" text="Open CSV File" />
                   <MenuItem mnemonicParsing="false" onAction="#createGraphOfStations" text="Shortest Distance" />
                   <MenuItem mnemonicParsing="false" onAction="#initialiseFruitGraph" text="FruitGraph" />
+                  <MenuItem mnemonicParsing="false" onAction="#addConnections" text="TestGraph" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Edit">
