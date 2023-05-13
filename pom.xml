@@ -20,6 +20,11 @@
             <artifactId>javafx-controls</artifactId>
             <version>18-ea+6</version>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.jgrapht</groupId>-->
+<!--            <artifactId>jgrapht-core</artifactId>-->
+<!--            <version>1.5.2</version>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
@@ -94,6 +99,24 @@
             <groupId>in.yajnesh.util</groupId>
             <artifactId>java-util</artifactId>
             <version>1.0.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jgrapht</groupId>
+            <artifactId>jgrapht-jdk1.5</artifactId>
+            <version>0.7.3</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>jgrapht</groupId>
+            <artifactId>jgrapht</artifactId>
+            <version>0.7.3</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>jgraph</groupId>
+            <artifactId>jgraph</artifactId>
+            <version>5.13.0.0</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
