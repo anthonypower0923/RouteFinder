@@ -37,7 +37,7 @@ public class RouteFinderController<T> {
     static boolean passedWaypoint = false;
 
 
-    public void openCSVFile() throws IOException {
+    private void openCSVFile() throws IOException {
         List<List<String>> list = new ArrayList<List<String>>();
         CSVReader reader = null;
         int i = 0;
@@ -71,7 +71,7 @@ public class RouteFinderController<T> {
 //        System.out.println(stations.toString());
     }
 
-    public void createGraphOfStations() throws IOException {
+    private void createGraphOfStations() throws IOException {
         List<List<String>> list = new ArrayList<List<String>>();
         CSVReader reader = null;
         reader = new CSVReader(new FileReader("/Users/anthonypower/Documents/semester4/data_structures_&_algorithims2/RouteFinder/src/main/resources/com/example/routefinder/actual_connections.csv"));
@@ -105,7 +105,7 @@ public class RouteFinderController<T> {
 //                System.out.println(node.adjList);
             }
         }
-        System.out.println(findPathDepthFirst(graph.get(245), null,graph.get(274).data));
+        //System.out.println(findPathDepthFirst(graph.get(245), null,graph.get(274).data));
     }
 
     public void createGraphOfStationsWithCost() throws IOException {
@@ -145,7 +145,7 @@ public class RouteFinderController<T> {
     }
 
 
-    public static <T> List<Node<?>> findPathDepthFirst(Node<?> currentNode, List<Node<?>> encountered, T lookingfor) {
+    public static <T> List<Node<?>> findPathDepthFirst(Node<?> currentNode, List<Node<?>> encountered, Node<?> waypoint , T lookingfor) {
         if (currentNode.data.equals(" Temporary Node"))
             return null;
 
@@ -162,10 +162,10 @@ public class RouteFinderController<T> {
 
         for (Node<?> adjNode : currentNode.adjList)
             if (!encountered.contains(adjNode)) {
-                result = findPathDepthFirst(adjNode, encountered, lookingfor);
+                result = findPathDepthFirst(adjNode, encountered, waypoint , lookingfor);
                 if (result != null) {
-                    result.add(0, currentNode);
-                    return result;
+                        result.add(0, currentNode);
+                        return result;
                 }
             }
         return null;
@@ -226,46 +226,15 @@ public class RouteFinderController<T> {
         return result;
     }
 
-    public void initialiseFruitGraph() {
-        Node<String> pear = new Node<>("Pear");
-        Node<String> orange = new Node<>("Orange");
-        Node<String> cherry = new Node<>("Cherry");
-        Node<String> apple = new Node<>("Apple");
-        Node<String> plum = new Node<>("Plum");
-        Node<String> mango = new Node<>("Mango");
-        Node<String> kiwi = new Node<>("Kiwi");
-        Node<String> coconut = new Node<>("Coconut");
-        Node<String> banana = new Node<>("Banana");
-
-        pear.connectToNodeUndirected(apple);
-        pear.connectToNodeUndirected(kiwi);
-        apple.connectToNodeUndirected(cherry);
-        apple.connectToNodeUndirected(plum);
-        cherry.connectToNodeUndirected(plum);
-        plum.connectToNodeUndirected(mango);
-        mango.connectToNodeUndirected(kiwi);
-        kiwi.connectToNodeUndirected(coconut);
-        kiwi.connectToNodeUndirected(orange);
-        mango.connectToNodeUndirected(banana);
-
-        List<List<Node<?>>> paths = findAllPathsDepthFirst(pear, null, cherry.data);
-        System.out.println(paths);
-        //System.out.println("Coconut Adj List " + coconut.adjList);
-        //System.out.println("Orange Adj List " + orange.adjList);
-        //System.out.println("Kiwi Adj List " + kiwi.adjList);
-        //System.out.println("Mango Adj List " + mango.adjList);
-
-        //System.out.println(traverseGraphDepthFirst(g,null));
-    }
-
+    //Call this method as findPathBreadthFirst requires agenda list from this
     public static <T> List<Node<?>> findPathBreadthFirstly(Node<?> startNode, List<Node<?>> encountered ,  Node<?> waypoint,T lookingfor) {
         List<List<Node<?>>> agenda = new ArrayList<>(); //Agenda comprised of path lists here!
         List<Node<?>> firstAgendaPath = new ArrayList<>(), resultPath;
         firstAgendaPath.add(startNode);
         agenda.add(firstAgendaPath);
-        resultPath = findPathBreadthFirst(agenda, encountered, waypoint, lookingfor); //Get single BFS path (will be shortest)
-        Collections.reverse(resultPath); //Reverse path (currently has the goal node as the first item)
-        return resultPath;
+        resultPath = findPathBreadthFirst(agenda, encountered, waypoint, lookingfor);//Get single BFS path (will be shortest)
+            Collections.reverse(resultPath); //Reverse path (currently has the goal node as the first item)
+            return resultPath;
     }
 
     public static <T> List<Node<?>> findPathBreadthFirst(List<List<Node<?>>> agenda, List<Node<?>> encountered, Node<?> waypoint, T lookingfor) {
@@ -292,7 +261,7 @@ public class RouteFinderController<T> {
         return findPathBreadthFirst(agenda, encountered, waypoint, lookingfor); //Tail call
     }
 
-    public static double distance(double lat1, double lat2, double lon1, double lon2) {
+    private static double distance(double lat1, double lat2, double lon1, double lon2) {
         lon1 = Math.toRadians(lon1);
         lon2 = Math.toRadians(lon2);
         lat1 = Math.toRadians(lat1);

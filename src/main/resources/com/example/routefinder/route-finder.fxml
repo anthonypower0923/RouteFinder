@@ -13,9 +13,9 @@
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-              <MenuItem mnemonicParsing="false" onAction="#openCSVFile" text="Open CSV File" />
-                  <MenuItem mnemonicParsing="false" onAction="#createGraphOfStations" text="Shortest Distance" />
-                  <MenuItem mnemonicParsing="false" onAction="#initialiseFruitGraph" text="FruitGraph" />
+              <MenuItem mnemonicParsing="false" text="Open CSV File" />
+                  <MenuItem mnemonicParsing="false" text="Shortest Distance" />
+                  <MenuItem mnemonicParsing="false" text="FruitGraph" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Edit">

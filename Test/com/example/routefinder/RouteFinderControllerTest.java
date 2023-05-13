@@ -34,7 +34,7 @@ class RouteFinderControllerTest {
         kiwi.connectToNodeUndirected(orange);
         mango.connectToNodeUndirected(banana);
 
-        List<Node<?>> path = RouteFinderController.findPathDepthFirst(pear, null, cherry.data);
+        List<Node<?>> path = RouteFinderController.findPathDepthFirst(pear, null, null , cherry.data);
         //System.out.println(path);
         assertTrue(path.contains(pear) && path.contains(cherry));
     }
@@ -64,8 +64,8 @@ class RouteFinderControllerTest {
 
         List<Node<?>> encountered = new ArrayList<>();
         encountered.add(apple);
-        List<Node<?>> path = RouteFinderController.findPathDepthFirst(pear, encountered, cherry.data);
-        System.out.println(path);
+        List<Node<?>> path = RouteFinderController.findPathDepthFirst(pear, encountered, null , cherry.data);
+        //System.out.println(path);
         assertTrue(path.contains(pear) && path.contains(cherry) && !path.contains(apple));
     }
 
@@ -104,7 +104,7 @@ class RouteFinderControllerTest {
         kiwi.connectToNodeUndirected(orange);
         mango.connectToNodeUndirected(banana);
 
-        List<Node<?>> path = RouteFinderController.findPathDepthFirst(pear, encountered, cherry.data);
+        List<Node<?>> path = RouteFinderController.findPathDepthFirst(pear, encountered, null , cherry.data);
         //System.out.println(path);
         assertTrue(path == null);
     }
@@ -269,7 +269,7 @@ class RouteFinderControllerTest {
         mango.connectToNodeUndirected(banana);
 
         List<Node<?>> path = RouteFinderController.findPathBreadthFirstly(pear, encountered,null, cherry.data);
-        System.out.println(path);
+        //System.out.println(path);
         assertTrue(path.contains(pear) && path.contains(cherry) && !path.contains(apple));
     }
 
