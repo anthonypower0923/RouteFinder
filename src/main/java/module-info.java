@@ -10,6 +10,7 @@ module com.example.routefinder {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
     requires opencsv;
+    requires org.jgrapht.core;
 
     opens com.example.routefinder to javafx.fxml;
     exports com.example.routefinder;

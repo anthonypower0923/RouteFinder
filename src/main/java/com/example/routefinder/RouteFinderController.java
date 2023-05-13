@@ -1,6 +1,4 @@
 package com.example.routefinder;
-import java.io.*;
-import java.util.*;
 
 import com.opencsv.CSVReader;
 import javafx.fxml.FXML;
@@ -11,8 +9,14 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
-import static com.example.routefinder.CostedPath.findCheapestPathDijkstra;
-import static com.example.routefinder.CostedPath.searchGraphDepthFirstCheapestPath;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 
 public class RouteFinderController<T> {
     @FXML
@@ -25,7 +29,7 @@ public class RouteFinderController<T> {
     ImageView imageView;
 
     static Stage stage;
-    ArrayList<Station> stations = new ArrayList<>();
+    static ArrayList<Station> stations = new ArrayList<>();
     List<Node<?>> graph = new ArrayList<>();
     List<Node<?>> testGraph = new ArrayList<>();
     List<Node<?>> connections = new ArrayList<>();
@@ -81,8 +85,8 @@ public class RouteFinderController<T> {
         }
 
         for (int i = 0; i < stations.size(); i++) {
-                node = new Node(stations.get(i));
-                graph.add(node);
+            node = new Node(stations.get(i).toString());
+            graph.add(node);
         }
 
         for (List<String> e : list) {
@@ -94,14 +98,14 @@ public class RouteFinderController<T> {
             int dest = Integer.parseInt(station2);
 
             if ((initial - 1 < stations.size()) && (dest - 1 < stations.size())) {
-                    node = (Node<T>) graph.get(initial - 1);
-                    otherNode = (Node<T>) graph.get(dest - 1);
-                    node.connectToNodeUndirected(otherNode);
+                node = (Node<T>) graph.get(initial - 1);
+                otherNode = (Node<T>) graph.get(dest - 1);
+                node.connectToNodeUndirected(otherNode);
 //                System.out.println(" ");
 //                System.out.println(node.adjList);
             }
         }
-        traverseGraphDepthFirst(graph.get(20),null);
+        System.out.println(findPathDepthFirst(graph.get(245), null,graph.get(274).data));
     }
 
     public void createGraphOfStationsWithCost() throws IOException {
@@ -118,7 +122,7 @@ public class RouteFinderController<T> {
         }
 
         for (int i = 0; i < stations.size(); i++) {
-            node = new NodeWithCost<T>((T) stations.get(i).id);
+            node = new NodeWithCost<T>((T) stations.get(i).toString());
             graphWithCostNodes.add(node);
         }
 
@@ -133,7 +137,7 @@ public class RouteFinderController<T> {
             if ((initial - 1 < stations.size()) && (dest - 1 < stations.size())) {
                 node = (NodeWithCost<T>) graphWithCostNodes.get(initial - 1);
                 otherNode = (NodeWithCost<T>) graphWithCostNodes.get(dest - 1);
-                node.connectToNodeUndirected(otherNode,distance(stations.get(initial-1).getLatitude(),stations.get(dest-1).getLatitude(),stations.get(initial-1).getLongitude(),stations.get(dest-1).getLongitude()));
+                node.connectToNodeUndirected(otherNode, distance(stations.get(initial - 1).getLatitude(), stations.get(dest - 1).getLatitude(), stations.get(initial - 1).getLongitude(), stations.get(dest - 1).getLongitude()));
 //                System.out.println(" ");
 //                System.out.println(node.adjList);
             }
@@ -181,8 +185,7 @@ public class RouteFinderController<T> {
         System.out.println(encountered);
     }
 
-    public static <T> List<List<Node<?>>> findAllPathsDepthFirst(Node<?> currentNode, List<Node<?>> encountered,
-                                                                 Node<?> waypoint, T lookingfor) {
+    public static <T> List<List<Node<?>>> findAllPathsDepthFirst(Node<?> currentNode, List<Node<?>> encountered , T lookingfor) {
         List<List<Node<?>>> result = null;
         List<List<Node<?>>> temp2 = null;
 
@@ -195,18 +198,27 @@ public class RouteFinderController<T> {
             return result;
         }
 
-        if (encountered == null)
+        if (encountered == null) {
             encountered = new ArrayList<>(); //First node so create new (empty) encountered list
+        }
         encountered.add(currentNode);
-        System.out.println(currentNode);
 
         for (Node<?> adjNode : currentNode.adjList) {
             if (!encountered.contains(adjNode)) {
-                temp2 = findAllPathsDepthFirst(adjNode, new ArrayList<>(encountered), waypoint, lookingfor);
+
+//                List<Node<?>> enc = new ArrayList<>(encountered);
+//                System.out.println("Encountered List");
+//                enc.forEach(s -> System.out.println(s.data));
+//                System.out.println("-----------------");
+
+                temp2 = findAllPathsDepthFirst(adjNode, new ArrayList<>(encountered) , lookingfor);
                 if (temp2 != null) { //Result of the recursive call contains one or more paths to the solution node
-                    for (List<Node<?>> x : temp2)
+                    for (List<Node<?>> x : temp2) {
                         x.add(0, currentNode);
-                    if (result == null) result = temp2;
+                    }
+                    if (result == null) {
+                        result = temp2;
+                    }
                     else result.addAll(temp2);
                 }
             }
@@ -236,7 +248,7 @@ public class RouteFinderController<T> {
         kiwi.connectToNodeUndirected(orange);
         mango.connectToNodeUndirected(banana);
 
-        List<List<Node<?>>> paths = findAllPathsDepthFirst(pear, null, null, cherry.data);
+        List<List<Node<?>>> paths = findAllPathsDepthFirst(pear, null, cherry.data);
         System.out.println(paths);
         //System.out.println("Coconut Adj List " + coconut.adjList);
         //System.out.println("Orange Adj List " + orange.adjList);
@@ -246,12 +258,12 @@ public class RouteFinderController<T> {
         //System.out.println(traverseGraphDepthFirst(g,null));
     }
 
-    public static <T> List<Node<?>> findPathBreadthFirstly(Node<?> startNode, Node<?> waypoint, T lookingfor) {
+    public static <T> List<Node<?>> findPathBreadthFirstly(Node<?> startNode, List<Node<?>> encountered ,  Node<?> waypoint,T lookingfor) {
         List<List<Node<?>>> agenda = new ArrayList<>(); //Agenda comprised of path lists here!
         List<Node<?>> firstAgendaPath = new ArrayList<>(), resultPath;
         firstAgendaPath.add(startNode);
         agenda.add(firstAgendaPath);
-        resultPath = findPathBreadthFirst(agenda, null, waypoint, lookingfor); //Get single BFS path (will be shortest)
+        resultPath = findPathBreadthFirst(agenda, encountered, waypoint, lookingfor); //Get single BFS path (will be shortest)
         Collections.reverse(resultPath); //Reverse path (currently has the goal node as the first item)
         return resultPath;
     }
@@ -303,7 +315,7 @@ public class RouteFinderController<T> {
         return (c * r);
     }
 
-    public void initialize() throws FileNotFoundException {
+    public void initialize() throws IOException {
         menubar.prefWidthProperty().bind(pane.widthProperty());
         scrollpane.prefWidthProperty().bind(pane.widthProperty());
         scrollpane.prefHeightProperty().bind(pane.heightProperty());
@@ -312,6 +324,12 @@ public class RouteFinderController<T> {
         FileInputStream fileInputStream = new FileInputStream("/Users/anthonypower/Documents/semester4/data_structures_&_algorithims2/RouteFinder/src/main/resources/com/example/routefinder/desktop-1920x1080.jpg");
         Image image = new Image(fileInputStream);
         imageView.setImage(image);
+
+        openCSVFile();
+        createGraphOfStations();
+        createGraphOfStationsWithCost();
+        System.out.println(graph);
+        System.out.println(graphWithCostNodes);
     }
 
 
@@ -337,34 +355,4 @@ public class RouteFinderController<T> {
 //for(NodeWithCost<?> n : cpa.pathList) System.out.println(n.data);
 //System.out.println("\nThe total path cost is: "+cpa.pathCost);
 
-    public void addConnections() throws IOException {
-        List<List<String>> list = new ArrayList<List<String>>();
-        CSVReader reader = null;
-        reader = new CSVReader(new FileReader("/Users/anthonypower/Documents/datasets/undirected-graphs/DDIBlumenau/net_edges.csv"), ',', '\'', 1);
-        String[] values = null;
-        Node<T> node = null;
-        Node<T> otherNode = null;
-
-
-        while ((values = reader.readNext()) != null) {
-            list.add(Arrays.asList(values));
-        }
-
-        for (List<String> e : list) {
-            String station1 = e.get(0);
-                node = new Node<>((T) station1);
-                testGraph.add(node);
-        }
-        for (List<String> e : list) {
-            String station1 = e.get(1);
-                node = new Node<>((T) station1);
-                connections.add(node);
-        }
-        for (int i = 0; i < testGraph.size(); i++) {
-            if (!testGraph.get(i).adjList.contains(connections.get(i)))
-            testGraph.get(i).connectToNodeUndirected(connections.get(i));
-        }
-
-        traverseGraphDepthFirst(testGraph.get(108),null);
-    }
 }
