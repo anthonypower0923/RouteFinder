@@ -26,12 +26,12 @@
             </HBox>
             <TextField fx:id="destination" layoutX="72.0" layoutY="52.0" prefHeight="26.0" prefWidth="213.0" />
             <Label layoutX="-1.0" layoutY="57.0" text="Destination" />
-            <ListView fx:id="listview" layoutX="1.0" layoutY="186.0" prefHeight="208.0" prefWidth="295.0" />
-            <Button layoutX="163.0" layoutY="86.0" mnemonicParsing="false" onAction="#findPathDepthFirst" prefHeight="26.0" prefWidth="119.0" text="DFS Single Path" />
-            <Button layoutX="160.0" layoutY="120.0" mnemonicParsing="false" onAction="#findAllPathsDepthFirst" prefHeight="26.0" prefWidth="125.0" text="DFS Multiple Paths" />
-            <Button layoutX="10.0" layoutY="86.0" mnemonicParsing="false" onAction="#findAllPathBreathFirst" prefHeight="26.0" prefWidth="125.0" text="BFS Path" />
-            <Button layoutX="10.0" layoutY="120.0" mnemonicParsing="false" onAction="#costedPath" prefHeight="26.0" prefWidth="125.0" text="Costed Path" />
-            <Button layoutX="98.0" layoutY="155.0" mnemonicParsing="false" onAction="#dijkstrasAlgorithim" prefHeight="26.0" prefWidth="125.0" text="Dijkstra's Algorithim" />
+            <ListView fx:id="listview" layoutX="1.0" layoutY="220.0" prefHeight="174.0" prefWidth="295.0" />
+            <Button layoutX="163.0" layoutY="121.0" mnemonicParsing="false" onAction="#findPathDepthFirst" prefHeight="26.0" prefWidth="119.0" text="DFS Single Path" />
+            <Button layoutX="160.0" layoutY="153.0" mnemonicParsing="false" onAction="#findAllPathsDepthFirst" prefHeight="26.0" prefWidth="125.0" text="DFS Multiple Paths" />
+            <Button layoutX="10.0" layoutY="121.0" mnemonicParsing="false" onAction="#findAllPathBreathFirst" prefHeight="26.0" prefWidth="125.0" text="BFS Path" />
+            <Button layoutX="10.0" layoutY="153.0" mnemonicParsing="false" onAction="#costedPath" prefHeight="26.0" prefWidth="125.0" text="Costed Path" />
+            <Button layoutX="86.0" layoutY="186.0" mnemonicParsing="false" onAction="#dijkstrasAlgorithim" prefHeight="26.0" prefWidth="125.0" text="Dijkstra's Algorithim" />
          </children>
       </AnchorPane>
     <AnchorPane fx:id="anchorpane" minHeight="0.0" minWidth="0.0" prefHeight="398.0" prefWidth="303.0">
