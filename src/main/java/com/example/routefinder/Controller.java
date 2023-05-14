@@ -36,7 +36,7 @@ public class Controller {
     CostedPath costedPath = new CostedPath();
 
     public void findPathDepthFirst() {
-        listview = new ListView<>();
+        listview.getItems().clear();
         String str = initial.getText();
         System.out.println(str);
         List<Node<?>> path = new ArrayList<>();
@@ -54,7 +54,7 @@ public class Controller {
     }
 
     public void findAllPathsDepthFirst() {
-        listview = new ListView<>();
+        listview.getItems().clear();
         String str = initial.getText();
         System.out.println(str);
         List<List<Node<?>>> paths = new ArrayList<>();
@@ -72,7 +72,7 @@ public class Controller {
     }
 
     public void findAllPathBreathFirst() {
-        listview = new ListView<>();
+        listview.getItems().clear();
         String str = initial.getText();
         System.out.println(str);
         List<Node<?>> path = new ArrayList<>();
@@ -90,7 +90,7 @@ public class Controller {
     }
 
     public void costedPath() {
-        listview = new ListView<>();
+        listview.getItems().clear();
         String str = initial.getText();
         System.out.println(str);
         List<Node<?>> path = new ArrayList<>();
@@ -106,7 +106,7 @@ public class Controller {
     }
 
     public void dijkstrasAlgorithim() {
-        listview = new ListView<>();
+        listview.getItems().clear();
         String str = initial.getText();
         System.out.println(str);
         List<Node<?>> path = new ArrayList<>();
