@@ -1,11 +1,9 @@
 package com.example.routefinder;
 
 import javafx.application.Application;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.MenuBar;
 import javafx.stage.Stage;
 
 import java.util.Objects;
@@ -14,7 +12,7 @@ public class Driver extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("route-finder.fxml")));
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("route-findernew.fxml")));
         primaryStage.setTitle("Route Finder");
         primaryStage.setScene(new Scene(root));
         primaryStage.show();

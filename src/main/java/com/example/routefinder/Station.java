@@ -11,7 +11,6 @@ public class Station implements Comparable<Station> {
     Integer totalLines;
 
     public Station() {
-
     }
 
     public Station(Integer id, double latitude, double longitude, String name, double zone, Integer totalLines) {

@@ -12,7 +12,7 @@ public class CostedPath {
 
     //Retrieve cheapest path by expanding all paths recursively depth-first
     public static <T> CostedPath searchGraphDepthFirstCheapestPath(NodeWithCost<?> from, List<NodeWithCost<?>> encountered, double totalCost, T lookingfor) {
-        if (from.data.equals(lookingfor)) { //Found it - end of path
+        if (from.data.toString().contains((CharSequence) lookingfor)) { //Found it - end of path
             CostedPath cp = new CostedPath(); //Create a new CostedPath object
             cp.pathList.add(from); //Add the current node to it - only (end of path) element
             cp.pathCost = totalCost; //Use the current total cost
@@ -43,7 +43,7 @@ public class CostedPath {
         do { //Loop until unencountered list is empty
             currentNode = unencountered.remove(0); //Get the first unencountered node (sorted list, so will have lowest value)
             encountered.add(currentNode); //Record current node in encountered list
-            if (currentNode.data.equals(lookingfor)) { //Found goal - assemble path list back to start and return it
+            if (currentNode.data.toString().contains((CharSequence) lookingfor)) { //Found goal - assemble path list back to start and return it
                 cp.pathList.add(currentNode); //Add the current (goal) node to the result list (only element)
                 cp.pathCost = currentNode.nodeValue; //The total cheapest path cost is the node value of the current/goal node
 

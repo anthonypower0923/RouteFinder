@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+
+<SplitPane fx:id="splitpane" dividerPositions="0.5" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.routefinder.Controller">
+  <items>
+    <AnchorPane fx:id="pane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="392.0" prefWidth="280.0">
+         <children>
+            <HBox layoutY="14.0" prefHeight="25.0" prefWidth="296.0">
+               <children>
+                  <Label prefHeight="26.0" prefWidth="72.0" text="Initial Station" />
+                  <TextField fx:id="initial" prefHeight="26.0" prefWidth="213.0">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </TextField>
+               </children>
+            </HBox>
+            <TextField fx:id="destination" layoutX="72.0" layoutY="52.0" prefHeight="26.0" prefWidth="213.0" />
+            <Label layoutX="-1.0" layoutY="57.0" text="Destination" />
+            <ListView fx:id="listview" layoutX="1.0" layoutY="89.0" prefHeight="304.0" prefWidth="177.0" />
+            <Button layoutX="178.0" layoutY="133.0" mnemonicParsing="false" onAction="#findPathDepthFirst" prefHeight="26.0" prefWidth="119.0" text="DFS Single Path" />
+            <Button layoutX="177.0" layoutY="345.0" mnemonicParsing="false" onAction="#findAllPathsDepthFirst" prefHeight="26.0" prefWidth="125.0" text="DFS Multiple Paths" />
+            <Button layoutX="177.0" layoutY="89.0" mnemonicParsing="false" onAction="#findAllPathBreathFirst" prefHeight="26.0" prefWidth="125.0" text="BFS Path" />
+            <Button layoutX="175.0" layoutY="263.0" mnemonicParsing="false" onAction="#costedPath" prefHeight="26.0" prefWidth="125.0" text="Costed Path" />
+            <Button layoutX="177.0" layoutY="302.0" mnemonicParsing="false" onAction="#dijkstrasAlgorithim" prefHeight="26.0" prefWidth="125.0" text="Dijkstra's Algorithim" />
+         </children>
+      </AnchorPane>
+    <AnchorPane fx:id="anchorpane" minHeight="0.0" minWidth="0.0" prefHeight="398.0" prefWidth="303.0">
+         <children>
+            <ImageView fx:id="imageView" fitHeight="398.0" fitWidth="296.0" pickOnBounds="true" />
+         </children></AnchorPane>
+  </items>
+</SplitPane>

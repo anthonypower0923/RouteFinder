@@ -1,13 +1,11 @@
 package com.example.routefinder;
 
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Map;
 import java.util.Set;
 
 public class Graph {
 
-    private Set<Node> nodes = new HashSet<>();
+    private Set<Node<Station>> nodes = new HashSet<>();
 
     public void addNode(Node nodeA) {
         nodes.add(nodeA);
@@ -19,11 +17,11 @@ public class Graph {
                 "nodes= " + nodes;
     }
 
-    public Set<Node> getNodes() {
+    public Set<Node<Station>> getNodes() {
         return nodes;
     }
 
-    public void setNodes(Set<Node> nodes) {
+    public void setNodes(Set<Node<Station>> nodes) {
         this.nodes = nodes;
     }
 }

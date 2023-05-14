@@ -2,8 +2,7 @@ package com.example.routefinder;
 
 import com.opencsv.CSVReader;
 import javafx.fxml.FXML;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -18,29 +17,31 @@ import java.util.Collections;
 import java.util.List;
 
 
-public class RouteFinderController<T> {
+public class RouteFinderController<T>{
     @FXML
     MenuBar menubar;
+    @FXML
+    AnchorPane anchorpane;
     @FXML
     AnchorPane pane;
     @FXML
     ScrollPane scrollpane;
     @FXML
     ImageView imageView;
+    @FXML
+    SplitPane splitpane;
+    @FXML
+    TreeView<String> treeview = new TreeView<String>();
 
     static Stage stage;
     static ArrayList<Station> stations = new ArrayList<>();
     List<Node<?>> graph = new ArrayList<>();
-    List<Node<?>> testGraph = new ArrayList<>();
-    List<Node<?>> connections = new ArrayList<>();
     List<NodeWithCost<?>> graphWithCostNodes = new ArrayList<>();
-    static boolean passedWaypoint = false;
 
 
-    private void openCSVFile() throws IOException {
+    public static void openCSVFile(ArrayList<Station> stations) throws IOException {
         List<List<String>> list = new ArrayList<List<String>>();
         CSVReader reader = null;
-        int i = 0;
         try {
 //parsing a CSV file into CSVReader class constructor
             reader = new CSVReader(new FileReader("/Users/anthonypower/Documents/semester4/data_structures_&_algorithims2/RouteFinder/src/main/resources/com/example/routefinder/london_underground.csv"));
@@ -71,13 +72,14 @@ public class RouteFinderController<T> {
 //        System.out.println(stations.toString());
     }
 
-    private void createGraphOfStations() throws IOException {
+    public void createGraphOfStations(ArrayList<Station> stations, List<Node<?>> graph) throws IOException {
         List<List<String>> list = new ArrayList<List<String>>();
         CSVReader reader = null;
         reader = new CSVReader(new FileReader("/Users/anthonypower/Documents/semester4/data_structures_&_algorithims2/RouteFinder/src/main/resources/com/example/routefinder/actual_connections.csv"));
         String[] values = null;
         Node<T> node = null;
         Node<T> otherNode = null;
+        //Graph graph = new Graph();
 
 
         while ((values = reader.readNext()) != null) {
@@ -85,7 +87,7 @@ public class RouteFinderController<T> {
         }
 
         for (int i = 0; i < stations.size(); i++) {
-            node = new Node(stations.get(i).toString());
+            node = new Node(stations.get(i));
             graph.add(node);
         }
 
@@ -105,10 +107,9 @@ public class RouteFinderController<T> {
 //                System.out.println(node.adjList);
             }
         }
-        //System.out.println(findPathDepthFirst(graph.get(245), null,graph.get(274).data));
     }
 
-    public void createGraphOfStationsWithCost() throws IOException {
+    public void createGraphOfStationsWithCost(ArrayList<Station> stations, List<NodeWithCost<?>> graphWithCostNodes) throws IOException {
         List<List<String>> list = new ArrayList<List<String>>();
         CSVReader reader = null;
         reader = new CSVReader(new FileReader("/Users/anthonypower/Documents/semester4/data_structures_&_algorithims2/RouteFinder/src/main/resources/com/example/routefinder/actual_connections.csv"));
@@ -150,7 +151,7 @@ public class RouteFinderController<T> {
             return null;
 
         List<Node<?>> result;
-        if (currentNode.data.equals(lookingfor)) { //Found it
+        if (currentNode.data.toString().contains((CharSequence) lookingfor)) { //Found it
             result = new ArrayList<>();
             result.add(currentNode); //Add the current node as the only/last entry in the path list
             return result; //Return the path list
@@ -190,7 +191,7 @@ public class RouteFinderController<T> {
         List<List<Node<?>>> temp2 = null;
 
         // check if the currentNode is the node we are looking for
-        if (currentNode.data.equals(lookingfor)) { //Found it
+        if (currentNode.data.toString().contains((CharSequence) lookingfor)) { //Found it
             List<Node<?>> temp = new ArrayList<>(); //Create new single solution path list
             temp.add(currentNode); //Add current node to the new single path list
             result = new ArrayList<>();
@@ -243,7 +244,7 @@ public class RouteFinderController<T> {
 
         List<Node<?>> nextPath = agenda.remove(0); //Get first item (next path to consider) off agenda
         Node<?> currentNode = nextPath.get(0); //The first item in the next path is the current node
-        if (currentNode.data.equals(lookingfor))
+        if (currentNode.data.toString().contains((CharSequence) lookingfor))
             return nextPath;
 
 
@@ -285,43 +286,27 @@ public class RouteFinderController<T> {
     }
 
     public void initialize() throws IOException {
-        menubar.prefWidthProperty().bind(pane.widthProperty());
-        scrollpane.prefWidthProperty().bind(pane.widthProperty());
-        scrollpane.prefHeightProperty().bind(pane.heightProperty());
+        pane.prefWidthProperty().bind(splitpane.widthProperty());
+        pane.prefHeightProperty().bind(splitpane.heightProperty());
+        treeview.prefWidthProperty().bind(anchorpane.widthProperty());
+        treeview.prefHeightProperty().bind(anchorpane.heightProperty());
         imageView.fitHeightProperty().bind(scrollpane.widthProperty());
         imageView.fitWidthProperty().bind(scrollpane.widthProperty());
         FileInputStream fileInputStream = new FileInputStream("/Users/anthonypower/Documents/semester4/data_structures_&_algorithims2/RouteFinder/src/main/resources/com/example/routefinder/desktop-1920x1080.jpg");
         Image image = new Image(fileInputStream);
         imageView.setImage(image);
 
-        openCSVFile();
-        createGraphOfStations();
-        createGraphOfStationsWithCost();
-        System.out.println(graph);
-        System.out.println(graphWithCostNodes);
+        TreeItem<String> rootItem = new TreeItem<String>("Route");
+        TreeItem<String> item = new TreeItem<String>("Route");
+        treeview.setRoot(rootItem);
+        rootItem.getChildren().add(item);
+
+        openCSVFile(stations);
+        createGraphOfStations(stations , graph);
+        createGraphOfStationsWithCost(stations , graphWithCostNodes);
+
+//        System.out.println(findAllPathsDepthFirst(graph.get(67),null ,graph.get(69)));
+
     }
-
-
-    //This exists to test costed path method for errors
-
-//    NodeWithCost<Character> q=new NodeWithCost<>('Q'); NodeWithCost<Character> w=new NodeWithCost<>('W'); NodeWithCost<Character> e=new NodeWithCost<>('E'); NodeWithCost<Character> r=new NodeWithCost<>('R'); NodeWithCost<Character> t=new NodeWithCost<>('T'); NodeWithCost<Character> y =new NodeWithCost<>('Y');
-//        q.connectToNodeUndirected(w,5); w.connectToNodeUndirected(y,20); w.connectToNodeUndirected(e,2);
-//        e.connectToNodeUndirected(t,7);
-//        t.connectToNodeUndirected(r,4);
-//        t.connectToNodeUndirected(y,7);
-//        r.connectToNodeUndirected(y,6);
-//
-//        System.out.println("The cheapest path currentNode Q to Y is:"); CostedPath cp=searchGraphDepthFirstCheapestPath(q,null,0,'Y'); for(NodeWithCost<?> n : cp.pathList)
-//            System.out.println(n.data);
-//        System.out.println("The total path cost is: "+cp.pathCost);
-
-
-    //This is to test dijkstra's algorithm
-//    NodeWithCost<String> a=new NodeWithCost<>("Silver"); NodeWithCost<String> b=new NodeWithCost<>("Bronze"); NodeWithCost<String> c=new NodeWithCost<>("Lead"); NodeWithCost<String> d=new NodeWithCost<>("Tin"); NodeWithCost<String> e=new NodeWithCost<>("Copper"); NodeWithCost<String> f=new NodeWithCost<>("Brass"); NodeWithCost<String> g=new NodeWithCost<>("Iron"); NodeWithCost<String> h=new NodeWithCost<>("Gold");
-//    a.connectToNodeUndirected(b, 5); a.connectToNodeUndirected(c, 9); b.connectToNodeUndirected(c, 2); b.connectToNodeUndirected(d, 6); c.connectToNodeUndirected(e, 5); d.connectToNodeUndirected(h, 8); d.connectToNodeUndirected(g, 9); e.connectToNodeUndirected(g, 3); e.connectToNodeUndirected(f, 7); f.connectToNodeUndirected(g, 6); g.connectToNodeUndirected(h, 2);
-//    System.out.println("The cheapest path currentNode Silver to Gold"); System.out.println("using Dijkstra's algorithm:"); System.out.println("-------------------------------------");
-//    CostedPath cpa = findCheapestPathDijkstra(a,"Gold");
-//for(NodeWithCost<?> n : cpa.pathList) System.out.println(n.data);
-//System.out.println("\nThe total path cost is: "+cpa.pathCost);
 
 }

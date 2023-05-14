@@ -23,7 +23,7 @@ public class NodeWithCost<T> {
         adjList.add(new GraphLink(destNode,cost));
     }
 
-    public void connectToNodeUndirected(NodeWithCost<T> destNode,double cost) {
+    public void connectToNodeUndirected(NodeWithCost<T> destNode, double cost) {
         adjList.add(new GraphLink(destNode,cost));
         destNode.adjList.add(new GraphLink(this,cost));
     }
